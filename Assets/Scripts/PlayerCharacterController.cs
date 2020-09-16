@@ -19,8 +19,8 @@ public class PlayerCharacterController : MonoBehaviour
     void Update()
     {
         //Set velocity of player
-        float horizontalAxis = Input.GetAxis("Horizontal");
-        float verticalAxis = Input.GetAxis("Vertical");
+        float horizontalAxis = Input.GetAxis("Horizontal"); // a, d
+        float verticalAxis = Input.GetAxis("Vertical");//w, s
 
         rb.velocity = new Vector2(horizontalAxis * speed, verticalAxis * speed);
     }
