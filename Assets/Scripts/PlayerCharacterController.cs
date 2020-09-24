@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerCharacterController : MonoBehaviour
 {
+
+
     [SerializeField]
     Rigidbody2D rb;
 
