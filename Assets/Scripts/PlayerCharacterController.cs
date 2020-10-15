@@ -15,12 +15,22 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField]
     GameObject battleScene; //Battle scene when we encounter enemy
 
+    private void Awake()
+    {
+        //Subscirbe to saver event
+        Saver.OnSave.AddListener(OnSaveCallBack);
+        Saver.OnLoad.AddListener(OnLoadCallBack);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         //Subscribe to event
         BattleManager.instance.onEnterBattle += OnEnterBattleCallBack;
         BattleManager.instance.onExitBattle += OnExitBattleCallBack;
+
+        
+
     }
 
     //// Update is called once per frame
@@ -66,4 +76,37 @@ public class PlayerCharacterController : MonoBehaviour
         //gameObject.SetActive(false);
     }
 
+    void OnSaveCallBack()
+    {
+        //Save player's position as string
+        string dataToStore = "";
+
+        dataToStore = transform.position.x + "," + transform.position.y + "," + transform.position.z;
+
+        PlayerPrefs.SetString("PlayerPosition", dataToStore);
+        Debug.Log("Player position saved");
+    }
+
+    void OnLoadCallBack()
+    {
+        //Load player's position as string
+        if(PlayerPrefs.HasKey("PlayerPosition"))
+        {
+            string saveData = PlayerPrefs.GetString("PlayerPosition", "");
+
+            char[] delimiters = new char[] { ',' };
+
+            //Splite string data
+            string[] spliteData = saveData.Split(delimiters);
+
+            //parse to get float
+            float x = float.Parse(spliteData[0]);
+            float y = float.Parse(spliteData[1]);
+            float z = float.Parse(spliteData[2]);
+
+            transform.position = new Vector3(x, y, z);
+            Debug.Log("Player position loaded");
+
+        }
+    }
 }
