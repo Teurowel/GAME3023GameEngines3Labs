@@ -7,6 +7,8 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField]
     Rigidbody2D rb;
 
+    Animator animator;
+
     [SerializeField]
     float speed = 10f;
 
@@ -14,6 +16,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     [SerializeField]
     GameObject battleScene; //Battle scene when we encounter enemy
+
 
     private void Awake()
     {
@@ -29,7 +32,7 @@ public class PlayerCharacterController : MonoBehaviour
         BattleManager.instance.onEnterBattle += OnEnterBattleCallBack;
         BattleManager.instance.onExitBattle += OnExitBattleCallBack;
 
-        
+        animator = GetComponent<Animator>();
 
     }
 
@@ -41,6 +44,20 @@ public class PlayerCharacterController : MonoBehaviour
         float verticalAxis = Input.GetAxis("Vertical");//w, s
 
         rb.velocity = new Vector2(horizontalAxis * speed, verticalAxis * speed);
+
+        //Set animator paramter for walk animation
+        animator.SetFloat("Horizontal", horizontalAxis);
+        animator.SetFloat("Vertical", verticalAxis);
+        animator.SetFloat("Speed", rb.velocity.sqrMagnitude);
+
+
+
+        //Set animator paramter for idle animation
+        if(horizontalAxis >= 0.1 || horizontalAxis <= -0.1 || verticalAxis >= 0.1 || verticalAxis <= -0.1)
+        {
+            animator.SetFloat("LastHorizontal", horizontalAxis);
+            animator.SetFloat("LastVertical", verticalAxis);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
