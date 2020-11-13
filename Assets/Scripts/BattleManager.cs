@@ -2,6 +2,12 @@
 //using System.Collections.Generic;
 using UnityEngine;
 
+enum Phase
+{
+    PLAYER_PHASE,
+    ENEMY_PHASE
+}
+
 public class BattleManager : MonoBehaviour
 {
     public bool IsInEncounterZone;
@@ -16,6 +22,17 @@ public class BattleManager : MonoBehaviour
 
     public GameObject battleScene;
 
+    [SerializeField] PlayerCharacter playerCharacter = null; //player character
+    ICharacter playerCharacterInterface = null;
+
+    [SerializeField] EnemyCharacter enemyCharacter = null; //enemy character
+    ICharacter enemyCharacterInterface = null;
+
+    [SerializeField] EnemyCharacterAttributes[] enemyCharacters = null; //list of enemy characters
+
+    [SerializeField] TMPro.TextMeshProUGUI[] abilityTexts = null;
+
+    Phase phase = Phase.PLAYER_PHASE;
 
     //Delegates
     public delegate void OnEnterBattle();
@@ -43,10 +60,32 @@ public class BattleManager : MonoBehaviour
     {
         onEnterBattle += OnEnterBatleCallback;
         onExitBattle += OnExitBatleCallback;
+
+        if(playerCharacter != null)
+        {
+            playerCharacterInterface = playerCharacter.GetComponent<ICharacter>();
+            playerCharacter.onAnimFinished.AddListener(OnPlayerAnimFinishedCallback); //Add call back funtion to player anim fisnihed
+        }
+
+        if (enemyCharacter != null)
+        {
+            enemyCharacterInterface = enemyCharacter.GetComponent<ICharacter>();
+        }
     }
 
     // Update is called once per frame
     void Update()
+    {
+        CheckEncounterZone();
+
+        if(phase == Phase.ENEMY_PHASE)
+        {
+            Debug.Log("enemy animation finished, turn chagned to player");
+            phase = Phase.PLAYER_PHASE;
+        }
+    }
+
+    void CheckEncounterZone()
     {
         //If we are in Encounter Zone...
         if (IsInEncounterZone == true)
@@ -72,9 +111,13 @@ public class BattleManager : MonoBehaviour
                         {
                             onEnterBattle.Invoke();
 
-                            if(battleScene != null)
+                            if (battleScene != null)
                             {
                                 battleScene.SetActive(true);
+
+                                SetRandomEnemy();
+
+                                SetAbilityButtonText();
                             }
                         }
                     }
@@ -89,6 +132,30 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    void SetAbilityButtonText()
+    {
+        for (int i = 0; i < playerCharacterInterface.Abilities.Length; ++i)
+        {
+            if (playerCharacterInterface.Abilities[i] != null)
+            {
+                abilityTexts[i].text = playerCharacterInterface.Abilities[i].abilityName;
+            }
+            else
+            {
+                abilityTexts[i].text = "none";
+            }
+        }
+    }
+
+    void SetRandomEnemy()
+    {
+        //Set random enemy from array
+        enemyCharacter.Hp = enemyCharacters[0].Hp;
+        enemyCharacter.HpMax = enemyCharacters[0].HpMax;
+        enemyCharacter.Damage = enemyCharacters[0].Damage;
+        enemyCharacter.Abilities = enemyCharacters[0].Abilities;
+    }
+
     void OnEnterBatleCallback()
     {
         IsInEncounterZone = false;
@@ -97,5 +164,27 @@ public class BattleManager : MonoBehaviour
     void OnExitBatleCallback()
     {
         IsInEncounterZone = true;
+    }
+
+    public void OnAbilityButtonClicked(int buttonIdx)
+    {
+        //Only works on player phase
+        if (phase == Phase.PLAYER_PHASE)
+        {
+            if (playerCharacterInterface.Abilities[buttonIdx] != null && enemyCharacterInterface != null)
+            {
+                playerCharacterInterface.Abilities[buttonIdx].ApplyEffects(playerCharacterInterface, enemyCharacterInterface);
+
+                playerCharacter.ReplaceAbilityAnimationClip(buttonIdx);
+
+                playerCharacterInterface.Animator.SetTrigger("AbilityAnimationTrigger");
+            }
+        }
+    }
+
+    public void OnPlayerAnimFinishedCallback()
+    {
+        Debug.Log("Player animation finished, turn chagned to enemy");
+        phase = Phase.ENEMY_PHASE;
     }
 }
