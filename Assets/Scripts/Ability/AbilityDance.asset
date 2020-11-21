@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: Dance
   animationClip: {fileID: 7400000, guid: c6315fd407761594e9794adc291ccf92, type: 2}
+  enemyAnimationClip: {fileID: 7400000, guid: 5dcb06495767d8a419e88e11d25f4572, type: 2}
+  abilityType: 2

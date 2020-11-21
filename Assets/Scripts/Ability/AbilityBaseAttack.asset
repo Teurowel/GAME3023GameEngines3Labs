@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: BaseAttack
   animationClip: {fileID: 7400000, guid: 139ec6e24c49d7645bf3a3be902267ff, type: 2}
+  enemyAnimationClip: {fileID: 7400000, guid: 4ffd11ac283fdf543b1d31dd3f654933, type: 2}
+  abilityType: 1

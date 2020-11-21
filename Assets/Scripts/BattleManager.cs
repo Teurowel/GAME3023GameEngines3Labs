@@ -70,6 +70,7 @@ public class BattleManager : MonoBehaviour
         if (enemyCharacter != null)
         {
             enemyCharacterInterface = enemyCharacter.GetComponent<ICharacter>();
+            enemyCharacter.onAnimFinished.AddListener(OnEnemyAnimFinishedCallback); //Add call back funtion to player anim fisnihed
         }
     }
 
@@ -80,8 +81,10 @@ public class BattleManager : MonoBehaviour
 
         if(phase == Phase.ENEMY_PHASE)
         {
-            Debug.Log("enemy animation finished, turn chagned to player");
-            phase = Phase.PLAYER_PHASE;
+
+
+            //Debug.Log("enemy animation finished, turn chagned to player");
+            //phase = Phase.PLAYER_PHASE;
         }
     }
 
@@ -154,6 +157,10 @@ public class BattleManager : MonoBehaviour
         enemyCharacter.HpMax = enemyCharacters[0].HpMax;
         enemyCharacter.Damage = enemyCharacters[0].Damage;
         enemyCharacter.Abilities = enemyCharacters[0].Abilities;
+        enemyCharacter.passiveOrAggressive = enemyCharacters[0].passiveOrAggressive;
+
+        //Set ability list absed on ability type
+        enemyCharacter.SetAbilityListBasedOnType();
     }
 
     void OnEnterBatleCallback()
@@ -185,6 +192,14 @@ public class BattleManager : MonoBehaviour
     public void OnPlayerAnimFinishedCallback()
     {
         Debug.Log("Player animation finished, turn chagned to enemy");
+        
         phase = Phase.ENEMY_PHASE;
+        enemyCharacter.DecisionMaking(playerCharacter);
+    }
+
+    public void OnEnemyAnimFinishedCallback()
+    {
+        Debug.Log("enemy animation finished, turn chagned to player");
+        phase = Phase.PLAYER_PHASE;
     }
 }

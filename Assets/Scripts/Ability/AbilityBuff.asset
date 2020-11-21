@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: Buff
   animationClip: {fileID: 7400000, guid: c867e6d02c785694594dbfd1d66e825e, type: 2}
+  enemyAnimationClip: {fileID: 7400000, guid: 718e5ed99ccff14469a50dfe9fa340bc, type: 2}
+  abilityType: 3

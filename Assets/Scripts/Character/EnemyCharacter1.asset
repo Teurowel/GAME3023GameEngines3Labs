@@ -17,3 +17,6 @@ MonoBehaviour:
   Damage: 20
   Abilities:
   - {fileID: 11400000, guid: 136a84bcb811f9f48af8fb15d62330da, type: 2}
+  - {fileID: 11400000, guid: 8b14784634962de49b97c35563dafee7, type: 2}
+  - {fileID: 11400000, guid: 74333446236ba204d9e8d89e18207abe, type: 2}
+  passiveOrAggressive: 80

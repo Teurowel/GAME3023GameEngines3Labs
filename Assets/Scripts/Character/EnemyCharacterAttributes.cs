@@ -9,4 +9,7 @@ public class EnemyCharacterAttributes : ScriptableObject
     public int HpMax = 0;
     public int Damage = 0;
     public Ability[] Abilities = null;
+
+    [Range(0, 100)]
+    public int passiveOrAggressive = 0; // 0 == passive, aggrssive = 100
 }
