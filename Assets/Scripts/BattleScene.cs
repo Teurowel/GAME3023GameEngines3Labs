@@ -20,10 +20,18 @@ public class BattleScene : MonoBehaviour
     {
         if(BattleManager.instance.onExitBattle != null)
         {
+            ScreenOverlayManager.Instance.FadeToBlack();
+
             BattleManager.instance.onExitBattle.Invoke();
 
-            gameObject.SetActive(false);
+            Invoke("ToDoOnExitBtnClick", 2.0f);
         }
-        
+    }
+
+    void ToDoOnExitBtnClick()
+    {
+        gameObject.SetActive(false);
+
+        ScreenOverlayManager.Instance.FadeFromBlack();
     }
 }

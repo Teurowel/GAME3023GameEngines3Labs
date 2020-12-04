@@ -62,5 +62,24 @@ public class ScreenOverlayManager : MonoBehaviour
     void OnEnterNewScene(Scene newScene, LoadSceneMode mode)
     {
         animator.Play("FadeFromBlack");
+
+        if(newScene.name == "GameScene")
+        {
+            //BattleManager.instance.onEnterBattle += OnEnterBattleCallback;
+        }
+    }
+
+    public void OnEnterBattleCallback()
+    {
+        StartCoroutine(FadeToBlackAndFromBlackCoroutine());
+    }
+
+    IEnumerator FadeToBlackAndFromBlackCoroutine()
+    {
+        FadeToBlack();
+
+        yield return new WaitForSeconds(2.0f);
+
+        FadeFromBlack();
     }
 }

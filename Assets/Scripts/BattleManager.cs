@@ -109,20 +109,16 @@ public class BattleManager : MonoBehaviour
                     {
                         Debug.Log("Encounter!!!");
 
-                        //Invoke delegate
                         if (onEnterBattle != null)
                         {
                             onEnterBattle.Invoke();
-
-                            if (battleScene != null)
-                            {
-                                battleScene.SetActive(true);
-
-                                SetRandomEnemy();
-
-                                SetAbilityButtonText();
-                            }
                         }
+
+                        //Fade screen to black first
+                        ScreenOverlayManager.Instance.FadeToBlack();
+
+                        //After fade to black, do sth
+                        Invoke("ToDoOnEnterBattle", 2.0f);
                     }
 
 
@@ -133,6 +129,22 @@ public class BattleManager : MonoBehaviour
                 Debug.Log("Moving..");
             }
         }
+    }
+
+    void ToDoOnEnterBattle()
+    {
+        //Show battle screen
+        if (battleScene != null)
+        {
+            battleScene.SetActive(true);
+
+            SetRandomEnemy();
+
+            SetAbilityButtonText();
+        }
+
+        //Fade screen from black
+        ScreenOverlayManager.Instance.FadeFromBlack();
     }
 
     void SetAbilityButtonText()
