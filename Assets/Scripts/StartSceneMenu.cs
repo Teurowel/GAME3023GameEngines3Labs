@@ -19,6 +19,13 @@ public class StartSceneMenu : MonoBehaviour
 
     public void OnStartBtnClick()
     {
+        ScreenOverlayManager.Instance.FadeToBlack();
+
+        Invoke("LoadGameScene", 2.0f);
+    }
+
+    void LoadGameScene()
+    {
         SceneManager.LoadScene("GameScene");
     }
 }
